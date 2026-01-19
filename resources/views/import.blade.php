@@ -32,6 +32,7 @@
 
             <div id="successBanner" class="hidden mb-4 rounded border border-green-200 bg-green-50 text-green-700 px-4 py-3 text-sm">
                 ✅ Import selesai. Data berhasil diimpor.
+                <a href="/users" class="ml-2 underline text-green-700 hover:text-green-800">Lihat data</a>
             </div>
 
             <div class="w-full bg-gray-200 rounded h-3 overflow-hidden">
