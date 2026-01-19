@@ -20,3 +20,4 @@ yarn-error.log
 
 # Ignore generated large CSV for testing
 big_users.csv
+contoh data csv/
