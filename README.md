@@ -1,15 +1,24 @@
-## Bulk Import Engine (Laravel 11, Async + Streaming)
+## 🚀 Bulk Import Engine (Laravel 11, Async + Streaming)
 
-### Dokumentasi (Sesuai Syarat)
+![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-%5E8.2-777BB3?logo=php&logoColor=white)
+![Queue](https://img.shields.io/badge/Queue-Redis%20%7C%20Database-44A833?logo=redis&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-#### Requirement Server
-- PHP >= 8.2
+Mesin impor CSV skala besar (100.000–1.000.000 baris) untuk data user (name, email, address) dengan pemrosesan streaming (hemat memori), berjalan asynchronous via Queue, dan endpoint progress real‑time. Termasuk halaman web sederhana untuk upload dan memantau progres.
+
+---
+
+### 📚 Dokumentasi (Sesuai Syarat)
+
+#### ✅ Requirement Server
+- PHP ≥ 8.2
 - Composer 2.x
 - Ekstensi PHP: `pdo_mysql` atau `pdo_sqlite`, `mbstring`, `openssl`, `json`, `tokenizer`, `ctype`
 - Database: MySQL/MariaDB atau PostgreSQL (SQLite untuk lokal dev juga bisa)
 - Queue driver: `database` (mudah) atau `redis` (disarankan produksi)
 
-#### Cara Setup Project
+#### 🛠️ Setup Project
 ```bash
 # Install dependencies
 composer install
@@ -27,7 +36,7 @@ php artisan key:generate
 php artisan migrate
 ```
 
-#### Cara Menjalankan Background Worker (Queue)
+#### 🧵 Menjalankan Background Worker (Queue)
 ```bash
 # Jalankan worker (umum)
 php artisan queue:work --queue=default --sleep=1 --tries=3
@@ -38,9 +47,9 @@ php -d memory_limit=1024M artisan queue:work --queue=default --sleep=1 --tries=1
 
 > Pastikan `.env` memakai driver non-`sync`, misal `QUEUE_CONNECTION=database` atau `QUEUE_CONNECTION=redis`.
 
-Mesin impor CSV skala besar (100.000–1.000.000 baris) untuk data user (name, email, address) dengan pemrosesan streaming (hemat memori), berjalan asynchronous via Queue, dan endpoint progress real‑time. Termasuk halaman web sederhana untuk upload dan memantau progres.
+---
 
-### Fitur Utama
+### ✨ Fitur Utama
 - Streaming CSV: baca baris‑per‑baris via `fopen()`/`fgetcsv()` (tanpa load seluruh file ke RAM).
 - Asynchronous Queue: request upload non‑blocking; job berjalan di background (`ShouldQueue`).
 - Progress Tracking: simpan `total_rows`, `processed_rows`, dan hitung `percent`.
@@ -83,12 +92,12 @@ php artisan queue:work --queue=default --sleep=1 --tries=3
 php artisan serve
 ```
 
-### Web UI
+### 🖥️ Web UI
 - Buka `http://127.0.0.1:8000/import`
 - Pilih file CSV (header: `name,email,address`), upload.
 - Progres akan tampil (bar, processed/total, percent) dan selesai saat status `done`.
 
-### API
+### 🔌 API
 - POST `/api/import-users`
 	- Form: `multipart/form-data`
 	- Field: `file` (mimes: csv)
@@ -115,11 +124,11 @@ curl -F "file=@users.csv" http://127.0.0.1:8000/api/import-users
 curl http://127.0.0.1:8000/api/import-users/123
 ```
 
-### Format CSV
+### 📄 Format CSV
 Baris pertama wajib header: `name,email,address`
 Contoh: lihat `users.csv` atau `big_users.csv` di root repo.
 
-### Arsitektur & Alur
+### 🏗️ Arsitektur & Alur
 - Controller: `ImportUserController` hanya menerima request dan mengembalikan JSON.
 - Validasi: `ImportUserRequest` memastikan file CSV valid (mimes: csv).
 - Service: `ImportUserService` menyimpan file ke storage dan membuat record progress.
@@ -136,7 +145,7 @@ File terkait:
 - Routes Web: `routes/web.php` (halaman `/import`)
 - UI: `resources/views/import.blade.php`
 
-### Kesesuaian Dengan Challenge
+### ✅ Kesesuaian Dengan Challenge
 - Wajib Laravel 10/11: Menggunakan Laravel 11 (lihat `composer.json`).
 - Strict Typing: `declare(strict_types=1);` diterapkan pada file inti aplikasi.
 - Type Hinting: method dan properti diberi hints seperlunya, model mengikuti aturan Eloquent (tanpa typed property yang bentrok dengan base `Model`).
@@ -152,7 +161,7 @@ File terkait:
 Catatan Node.js Streams:
 - Instruksi menekankan streaming (hemat memori). Karena proyek wajib Laravel, kami memakai streaming I/O native PHP yang setara karakteristiknya dengan Node Streams (incremental, low memory). Jika diwajibkan literal Node, dapat ditambah microservice Node terpisah yang mengirim batch ke Laravel (opsional).
 
-### Deviasi/Justifikasi dari Syarat Seleksi
+### 📎 Deviasi/Justifikasi dari Syarat Seleksi
 - Node.js Streams (di syarat) vs Laravel (wajib framework):
 	- Syarat menyebut “Gunakan Node.js Streams”, namun juga mewajibkan Laravel (PHP). Kami mengimplementasikan streaming dengan I/O PHP (`fopen`/`fgetcsv`) yang memiliki sifat teknis setara (membaca chunk/baris, tidak load full file, low memory). Jika literal Node wajib, solusi alternatif adalah microservice Node kecil untuk parsing streaming yang mengirim batch ke Laravel via Redis/HTTP. Pendekatan saat ini menjaga konsistensi dengan syarat “Wajib Laravel” sambil memenuhi tujuan performa.
 - Strict typing di setiap file PHP:
@@ -163,7 +172,7 @@ Catatan Node.js Streams:
 - Menyalakan worker dari web request:
 	- Tidak dilakukan demi keamanan dan stabilitas (daemon harus dijalankan dan diawasi oleh sistem/layanan, bukan melalui HTTP request yang short‑lived). Disediakan panduan menjalankan worker melalui terminal, Windows Service (NSSM), atau Task Scheduler.
 
-### Menjalankan Worker Queue (Windows)
+### 🪟 Menjalankan Worker Queue (Windows)
 Disarankan worker berjalan sebagai proses terawasi (bukan dari web request):
 
 1) Dev / Demo (terminal):
@@ -186,7 +195,7 @@ nssm start laravel-queue
 
 > Pastikan `.env` tidak menggunakan `QUEUE_CONNECTION=sync`.
 
-### Tips Performa & Stabilitas
+### ⚙️ Tips Performa & Stabilitas
 - Gunakan Redis untuk beban besar (`QUEUE_CONNECTION=redis`).
 - Sesuaikan `batchSize` di job (default 500) dengan resource DB.
 - Perbesar `--memory` dan `--timeout` worker bila file 500MB+.
@@ -203,17 +212,28 @@ nssm start laravel-queue
 		 ```
 	 - Job sudah disetel `public $timeout = 3600;` dan `public $tries = 1;` untuk mencegah duplikasi.
 
-### Troubleshooting
+### 🧯 Troubleshooting
 - Progres tidak jalan? Cek worker aktif dan `.env` driver queue.
 - Error typed property Eloquent: jangan ketik properti yang didefinisikan base `Model` (gunakan PHPDoc, sudah diterapkan di repo ini).
 - 500 saat upload: pastikan `post_max_size` dan `upload_max_filesize` di `php.ini` cukup besar.
 
-### Pengujian
+### 🧪 Pengujian
 ```
 php artisan test
 ```
 
-### Lisensi
+### 📜 Lisensi
+
+---
+
+### 🌟 Quick Links
+- Halaman Upload: `http://127.0.0.1:8000/import`
+- Endpoint Upload: `POST /api/import-users`
+- Endpoint Status: `GET /api/import-users/{id}`
+
+### 📦 Catatan Repository
+- File besar `big_users.csv` (data uji) diabaikan oleh Git untuk menjaga repo tetap ringan.
+- Jika ingin melacak file besar, gunakan Git LFS.
 MIT (mengikuti lisensi Laravel dan dependency terkait).
 #   s e l e k s i - m a g a n g 
  
