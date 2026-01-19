@@ -1,5 +1,43 @@
 ## Bulk Import Engine (Laravel 11, Async + Streaming)
 
+### Dokumentasi (Sesuai Syarat)
+
+#### Requirement Server
+- PHP >= 8.2
+- Composer 2.x
+- Ekstensi PHP: `pdo_mysql` atau `pdo_sqlite`, `mbstring`, `openssl`, `json`, `tokenizer`, `ctype`
+- Database: MySQL/MariaDB atau PostgreSQL (SQLite untuk lokal dev juga bisa)
+- Queue driver: `database` (mudah) atau `redis` (disarankan produksi)
+
+#### Cara Setup Project
+```bash
+# Install dependencies
+composer install
+
+# Salin file environment
+# Windows (PowerShell)
+Copy-Item .env.example .env
+# macOS/Linux
+cp .env.example .env
+
+# Generate app key
+php artisan key:generate
+
+# Konfigurasi DB di .env, lalu migrasi
+php artisan migrate
+```
+
+#### Cara Menjalankan Background Worker (Queue)
+```bash
+# Jalankan worker (umum)
+php artisan queue:work --queue=default --sleep=1 --tries=3
+
+# Opsi untuk file sangat besar (meningkatkan batas memori/timeout)
+php -d memory_limit=1024M artisan queue:work --queue=default --sleep=1 --tries=1 --timeout=3600 --memory=512
+```
+
+> Pastikan `.env` memakai driver non-`sync`, misal `QUEUE_CONNECTION=database` atau `QUEUE_CONNECTION=redis`.
+
 Mesin impor CSV skala besar (100.000–1.000.000 baris) untuk data user (name, email, address) dengan pemrosesan streaming (hemat memori), berjalan asynchronous via Queue, dan endpoint progress real‑time. Termasuk halaman web sederhana untuk upload dan memantau progres.
 
 ### Fitur Utama
