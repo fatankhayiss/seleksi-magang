@@ -155,6 +155,31 @@ php artisan queue:work \
 
 ---
 
+## ▶️ Cara Menggunakan (Import via Web)
+
+1) Jalankan Queue Worker (wajib, agar proses impor berjalan di background):
+```bash
+php artisan queue:work --queue=default --sleep=1 --tries=3
+# Untuk file sangat besar, pertimbangkan:
+php -d memory_limit=1024M artisan queue:work --queue=default --sleep=1 --tries=1 --timeout=3600 --memory=512
+```
+
+2) Jalankan Web Server Laravel:
+```bash
+php artisan serve
+```
+
+3) Buka halaman upload:
+- `http://127.0.0.1:8000/import`
+
+4) Pilih file CSV (header: `name,email,address`) lalu upload.
+
+5) Pantau progres di halaman (bar & angka). Saat selesai, muncul banner sukses.
+
+Catatan:
+- Pastikan `.env` memakai driver queue non-sync (mis. `QUEUE_CONNECTION=database` atau `redis`).
+- Jika memakai `redis`, pastikan server Redis berjalan sebelum `queue:work`.
+
 ## 🏗️ Arsitektur
 
 ```
