@@ -81,8 +81,12 @@ Karena keterbatasan GitHub (maksimal ±25MB per file), dataset CSV berukuran bes
 
 Dataset contoh berisi **±1.000.000 baris data user**:
 
-👉 **Download CSV (1M rows)**
-[https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing](https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing)
+<p align="left">
+  <a href="https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing" target="_blank">
+    <img src="https://img.shields.io/badge/Download-CSV%201M%20Rows-brightgreen?style=for-the-badge&logo=google-drive" />
+  </a>
+</p>
+
 
 **Langkah:**
 
