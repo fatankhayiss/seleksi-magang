@@ -20,12 +20,12 @@
 
 ## ✨ Highlight Utama
 
-✅ Streaming CSV (tanpa load file ke RAM)
-✅ Asynchronous Processing (Laravel Queue)
-✅ Real-Time Import Progress
-✅ Batch Upsert (performa tinggi)
-✅ Clean Architecture + Strict Typing
-✅ Web UI + REST API
+* ✅ Streaming CSV (tanpa load file ke RAM)
+* ✅ Asynchronous Processing (Laravel Queue)
+* ✅ Real-Time Import Progress
+* ✅ Batch Upsert (performa tinggi)
+* ✅ Clean Architecture + Strict Typing
+* ✅ Web UI + REST API
 
 ---
 
@@ -33,13 +33,13 @@
 
 **Bulk Import Engine** dirancang untuk kebutuhan **impor data besar** tanpa membuat server overload.
 
-Alur singkat:
+**Alur singkat:**
 
 1. User upload CSV
 2. Request langsung return (non-blocking)
 3. Job diproses di background (queue)
-4. File dibaca **baris-per-baris (streaming)**
-5. Progress bisa dipantau via API / Web UI
+4. File dibaca baris-per-baris (streaming)
+5. Progress dipantau via API / Web UI
 
 ---
 
@@ -60,66 +60,62 @@ Alur singkat:
 
 Header **WAJIB**:
 
-```
+```csv
 name,email,address
 ```
 
 Contoh:
 
-```
+```csv
 John Doe,john@mail.com,Jakarta
 Jane Doe,jane@mail.com,Bandung
 ```
 
 ---
+
 ## 📦 Sample Data (1 Juta Baris)
 
 Karena keterbatasan GitHub (maksimal ±25MB per file), dataset CSV berukuran besar **tidak disertakan langsung di repository**.
 
 ### 🔹 Opsi 1 — Download Dataset Siap Pakai
 
-Dataset contoh berisi **±1.000.000 baris data user** dapat diunduh melalui Google Drive:
+Dataset contoh berisi **±1.000.000 baris data user**:
 
-👉 **Download CSV (1M rows):**
+👉 **Download CSV (1M rows)**
 [https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing](https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing)
 
-Setelah diunduh:
+**Langkah:**
 
-1. Simpan file CSV di komputer lokal
-2. Buka halaman upload:
-   `http://127.0.0.1:8000/import`
-3. Upload file CSV tersebut melalui Web UI
+1. Download file CSV
+2. Buka `http://127.0.0.1:8000/import`
+3. Upload file melalui Web UI
 
 ---
 
-### 🔹 Opsi 2 — Generate Data Sendiri (Disarankan untuk Testing)
+### 🔹 Opsi 2 — Generate Data Sendiri
 
-Jika tidak ingin mengunduh file besar, Anda dapat **meng-generate CSV sendiri** dengan format yang sama.
+Jika tidak ingin mengunduh file besar, Anda dapat meng-generate CSV sendiri.
 
-Contoh struktur data:
+Contoh struktur:
 
-```
+```csv
 name,email,address
 User 1,user1@mail.com,Jakarta
 User 2,user2@mail.com,Bandung
-...
 ```
 
-Jumlah baris bebas disesuaikan (100K – 1M) sesuai kebutuhan pengujian performa.
+Jumlah baris bebas (100K – 1M) sesuai kebutuhan testing.
 
-> 💡 Pendekatan ini umum digunakan di industri untuk menjaga repository tetap ringan dan bersih.
-
----
+> 💡 Pendekatan ini umum di industri untuk menjaga repository tetap ringan.
 
 **Catatan:**
 
 * Header CSV **WAJIB**: `name,email,address`
-* File CSV besar sengaja diabaikan oleh Git (`.gitignore`)
-* Fokus repository ini adalah **mekanisme streaming, queue, dan stabilitas sistem**, bukan penyimpanan data besar di GitHub
-
-```
+* File CSV besar diabaikan oleh Git (`.gitignore`)
+* Fokus repo: **streaming, queue, dan stabilitas sistem**
 
 ---
+
 ## 🖥️ Web UI
 
 * URL: `http://127.0.0.1:8000/import`
@@ -127,7 +123,7 @@ Jumlah baris bebas disesuaikan (100K – 1M) sesuai kebutuhan pengujian performa
 
   * Upload CSV
   * Progress bar
-  * Status realtime (processing / done)
+  * Status realtime
 
 ---
 
@@ -136,13 +132,6 @@ Jumlah baris bebas disesuaikan (100K – 1M) sesuai kebutuhan pengujian performa
 ### Upload File
 
 **POST** `/api/import-users`
-
-**Request**
-
-* `multipart/form-data`
-* Field: `file` (CSV)
-
-**Response**
 
 ```json
 {
@@ -202,55 +191,30 @@ php artisan queue:work \
 
 ---
 
-## ▶️ Cara Menggunakan (Import via Web)
+## ▶️ Cara Menggunakan
 
-1) Jalankan Queue Worker (wajib, agar proses impor berjalan di background):
-```bash
-php artisan queue:work --queue=default --sleep=1 --tries=3
-# Untuk file sangat besar, pertimbangkan:
-php -d memory_limit=1024M artisan queue:work --queue=default --sleep=1 --tries=1 --timeout=3600 --memory=512
-```
-
-2) Jalankan Web Server Laravel:
 ```bash
 php artisan serve
+php artisan queue:work
 ```
 
-3) Buka halaman upload:
-- `http://127.0.0.1:8000/import`
+Buka:
+`http://127.0.0.1:8000/import`
 
-4) Pilih file CSV (header: `name,email,address`) lalu upload.
-
-5) Pantau progres di halaman (bar & angka). Saat selesai, muncul banner sukses.
-
-Catatan:
-- Pastikan `.env` memakai driver queue non-sync (mis. `QUEUE_CONNECTION=database` atau `redis`).
-- Jika memakai `redis`, pastikan server Redis berjalan sebelum `queue:work`.
+---
 
 ## 🏗️ Arsitektur
 
 ```
 Controller
-   ↓
-Form Request (Validation)
-   ↓
-Service (Save file + init progress)
-   ↓
-Queue Job (Streaming CSV + Batch Upsert)
-   ↓
+  ↓
+Form Request
+  ↓
+Service
+  ↓
+Queue Job (Streaming + Batch Upsert)
+  ↓
 Progress API
-```
-
-### File Penting
-
-```
-app/
-├─ Jobs/ImportUsersJob.php
-├─ Services/ImportUserService.php
-├─ Http/Controllers/ImportUserController.php
-├─ Http/Requests/ImportUserRequest.php
-├─ Models/ImportProgress.php
-└─ Models/User.php
 ```
 
 ---
@@ -263,28 +227,11 @@ php artisan test
 
 ---
 
-## ⚠️ Catatan Teknis Penting
+## ⚠️ Catatan Teknis
 
-* **Tidak menggunakan `fs.readFileSync` / load full file**
-* Streaming menggunakan PHP native I/O (setara Node Streams)
-* Typed property **tidak dipakai di Eloquent Model** (hindari fatal error)
-* Worker **tidak dijalankan via HTTP request**
-
----
-
-## 🧯 Troubleshooting
-
-* Progress tidak jalan → pastikan queue worker aktif
-* Upload gagal → cek `upload_max_filesize` & `post_max_size`
-* Job timeout → naikkan `--timeout` & `retry_after`
-
----
-
-## 📌 Quick Links
-
-* Upload UI: `http://127.0.0.1:8000/import`
-* Upload API: `POST /api/import-users`
-* Status API: `GET /api/import-users/{id}`
+* Tidak load full file ke RAM
+* Streaming PHP native (setara Node Streams)
+* Worker tidak dijalankan via HTTP request
 
 ---
 
@@ -292,8 +239,6 @@ php artisan test
 
 MIT License
 
----
-
 <p align="center">
-✨ Dibuat untuk seleksi magang & studi kasus sistem backend skala besar ✨
+✨ Dibuat untuk seleksi magang & studi kasus backend skala besar ✨
 </p>
