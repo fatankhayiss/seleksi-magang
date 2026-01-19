@@ -72,7 +72,54 @@ Jane Doe,jane@mail.com,Bandung
 ```
 
 ---
+## 📦 Sample Data (1 Juta Baris)
 
+Karena keterbatasan GitHub (maksimal ±25MB per file), dataset CSV berukuran besar **tidak disertakan langsung di repository**.
+
+### 🔹 Opsi 1 — Download Dataset Siap Pakai
+
+Dataset contoh berisi **±1.000.000 baris data user** dapat diunduh melalui Google Drive:
+
+👉 **Download CSV (1M rows):**
+[https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing](https://drive.google.com/file/d/1tWZZtV4t2OL8m6jXRCZTFpgWrrHgAQ0F/view?usp=sharing)
+
+Setelah diunduh:
+
+1. Simpan file CSV di komputer lokal
+2. Buka halaman upload:
+   `http://127.0.0.1:8000/import`
+3. Upload file CSV tersebut melalui Web UI
+
+---
+
+### 🔹 Opsi 2 — Generate Data Sendiri (Disarankan untuk Testing)
+
+Jika tidak ingin mengunduh file besar, Anda dapat **meng-generate CSV sendiri** dengan format yang sama.
+
+Contoh struktur data:
+
+```
+name,email,address
+User 1,user1@mail.com,Jakarta
+User 2,user2@mail.com,Bandung
+...
+```
+
+Jumlah baris bebas disesuaikan (100K – 1M) sesuai kebutuhan pengujian performa.
+
+> 💡 Pendekatan ini umum digunakan di industri untuk menjaga repository tetap ringan dan bersih.
+
+---
+
+**Catatan:**
+
+* Header CSV **WAJIB**: `name,email,address`
+* File CSV besar sengaja diabaikan oleh Git (`.gitignore`)
+* Fokus repository ini adalah **mekanisme streaming, queue, dan stabilitas sistem**, bukan penyimpanan data besar di GitHub
+
+```
+
+---
 ## 🖥️ Web UI
 
 * URL: `http://127.0.0.1:8000/import`
