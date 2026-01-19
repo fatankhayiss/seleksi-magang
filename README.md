@@ -216,5 +216,6 @@ php artisan test
 ### Lisensi
 MIT (mengikuti lisensi Laravel dan dependency terkait).
 #   s e l e k s i - m a g a n g 
+
  
  
